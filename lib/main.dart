@@ -33,18 +33,23 @@ class DocumentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Light and easy way to return multiple values from a single function call
-    final metadataRecord = document.metadata; // Returns a record
+    // Because they match, the variable declaration pattern destructures the expression
+    // - Accessing its values and binding them to new local variables of the same types and names
+    // final (title, modified: modified) = document.metadata; - Returns a record
+    final (title, :modified) = document.metadata; // Short-hand
+
+
 
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(metadataRecord.$1)),
+          child: Text(title)),
       ),
       body: Column(
         children: [
           Center(
             child: Text(
-              'Last modified ${metadataRecord.modified}',  // And this one.
+              'Last modified $modified}',  // And this one.
             ),          
           ),
         ],
