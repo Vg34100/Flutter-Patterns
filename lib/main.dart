@@ -37,6 +37,7 @@ class DocumentScreen extends StatelessWidget {
     // - Accessing its values and binding them to new local variables of the same types and names
     // final (title, modified: modified) = document.metadata; - Returns a record
     final (title, :modified) = document.metadata; // Short-hand
+    final blocks = document.getBlocks();
 
 
 
@@ -49,10 +50,47 @@ class DocumentScreen extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              'Last modified $modified}',  // And this one.
+              'Last modified $modified}',
             ),          
           ),
+          Expanded(child: ListView.builder(
+            itemCount: blocks.length,
+            itemBuilder: (context, index) {
+            return BlockWidget(block: blocks[index]); // constructs a BlockWidget widget for each item in the list of blocks
+          }))
         ],
+      ),
+    );
+  }
+}
+
+// Determines the styling of each block based on its type field
+class BlockWidget extends StatelessWidget {
+  final Block block;
+
+  const BlockWidget({
+    required this.block,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle? textStyle;
+    switch (block.type) {
+      case 'h1':
+        textStyle = Theme.of(context).textTheme.displayMedium;
+      case 'p' || 'checkbox':
+        textStyle = Theme.of(context).textTheme.bodyMedium;
+        // No need for break now
+      case _: // Wildcard pattern - match everything else
+        textStyle = Theme.of(context).textTheme.bodySmall;
+    }
+
+    return Container(
+      margin: const EdgeInsets.all(8),
+      child: Text(
+        block.text,
+        style: textStyle,
       ),
     );
   }
