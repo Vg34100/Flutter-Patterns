@@ -5,13 +5,20 @@ class Document {
   final Map<String, Object?> _json;
   Document() : _json = jsonDecode(documentJson);
 
+  // Validates that the data is structured correctly without using patterns
   (String, {DateTime modified}) get metadata { // The return type is a record with two fields
-    const title = 'My Document';
-    final now = DateTime.now();
-
-    return (title, modified: now); // The return statement constructs a new record by enclosing the two values in parenthesis
-  }      
-  
+    if (_json // The case body only executes if the case pattern matches the data in _json
+        case {
+          'metadata': {
+            'title': String title,
+            'modified': String localModified,
+          }
+        }) {
+      return (title, modified: DateTime.parse(localModified)); // The return statement constructs a new record by enclosing the two values in parenthesis
+    } else {
+      throw const FormatException('Unexpected JSON');
+    }
+  }
 }
 
 // Mocking incoming JSON data with a multi-line string
