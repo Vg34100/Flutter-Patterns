@@ -37,6 +37,7 @@ class DocumentScreen extends StatelessWidget {
     // - Accessing its values and binding them to new local variables of the same types and names
     // final (title, modified: modified) = document.metadata; - Returns a record
     final (title, :modified) = document.metadata; // Short-hand
+    final formattedModifiedDate = formatDate(modified);
     final blocks = document.getBlocks();
 
 
@@ -50,7 +51,7 @@ class DocumentScreen extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              'Last modified $modified}',
+              'Last modified $formattedModifiedDate',
             ),          
           ),
           Expanded(child: ListView.builder(
@@ -76,15 +77,12 @@ class BlockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle? textStyle;
-    switch (block.type) {
-      case 'h1':
-        textStyle = Theme.of(context).textTheme.displayMedium;
-      case 'p' || 'checkbox':
-        textStyle = Theme.of(context).textTheme.bodyMedium;
-        // No need for break now
-      case _: // Wildcard pattern - match everything else
-        textStyle = Theme.of(context).textTheme.bodySmall;
-    }
+    textStyle = switch (block.type) { // Turned a switch statement to a switch expression
+      'h1' => Theme.of(context).textTheme.displayMedium,
+      'p' || 'checkbox' => Theme.of(context).textTheme.bodyMedium,
+      _ => // Wildcard pattern - match everything else
+        Theme.of(context).textTheme.bodySmall
+    };
 
     return Container(
       margin: const EdgeInsets.all(8),
@@ -95,3 +93,24 @@ class BlockWidget extends StatelessWidget {
     );
   }
 }
+
+// Improve how the last modified date is displayed using patterns
+
+// Returns a switch expression that switches on the value difference (span of time between today and modified)
+String formatDate(DateTime dateTime) {
+  final today = DateTime.now();
+  final difference = dateTime.difference(today);
+
+  return switch (difference) {
+    Duration(inDays: 0) => 'today',
+    Duration(inDays: 1) => 'tomorrow',
+    Duration(inDays: -1) => 'yesterday',
+    // A guard clause (when) only add a condition to a pattearn after it's matched
+    Duration(inDays: final days) when days > 7 => '${days ~/ 7} weeks from now',
+    Duration(inDays: final days) when days < -7 =>
+      '${days.abs() ~/ 7} weeks ago',                                            
+    Duration(inDays: final days, isNegative: true) => '${days.abs()} days ago',
+    Duration(inDays: final days) => '$days days from now',
+  };
+}
+
