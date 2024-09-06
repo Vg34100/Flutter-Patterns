@@ -1,19 +1,47 @@
 import 'package:flutter/material.dart';
 
+import 'data.dart';
+
 void main() {
-  runApp(const MainApp());
+  runApp(const DocumentApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+// DocumentApp sets up the latest version of Material Design for theming the UI
+class DocumentApp extends StatelessWidget {
+  const DocumentApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: DocumentScreen(
+        document: Document(),
+      ),
+    );
+  }
+}
+
+// DocumentScreen provides the visual layout of the page using the Scaffold widget
+class DocumentScreen extends StatelessWidget {
+  final Document document;
+
+  const DocumentScreen({
+    required this.document,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Title goes here'),
+      ),
+      body: const Column(
+        children: [
+          Center(
+            child: Text('Body goes here'),
+          ),
+        ],
       ),
     );
   }

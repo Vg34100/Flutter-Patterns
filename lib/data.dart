@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-// Mocking incoming JSON data with a multi-line string
+// The JSON data is defined in the Document class
 class Document {
   final Map<String, Object?> _json;
   Document() : _json = jsonDecode(documentJson);
 }
 
+// Mocking incoming JSON data with a multi-line string
 const documentJson = '''
 {
   "metadata": {
