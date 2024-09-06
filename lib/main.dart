@@ -32,14 +32,20 @@ class DocumentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Light and easy way to return multiple values from a single function call
+    final metadataRecord = document.metadata; // Returns a record
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Title goes here'),
+        title: Center(
+          child: Text(metadataRecord.$1)),
       ),
-      body: const Column(
+      body: Column(
         children: [
           Center(
-            child: Text('Body goes here'),
+            child: Text(
+              'Last modified ${metadataRecord.modified}',  // And this one.
+            ),          
           ),
         ],
       ),
