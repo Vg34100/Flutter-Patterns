@@ -19,6 +19,30 @@ class Document {
       throw const FormatException('Unexpected JSON');
     }
   }
+
+  // RTeturns a list of Block objects, which are used to build the UI
+  List<Block> getBlocks() {
+    if (_json case {'blocks' : List blocksJson}) {
+      return [for (final blockJson in blocksJson) Block.fromJson(blockJson)];
+    } else {
+      throw const FormatException('Unexpected JSONM format');
+    }
+  }
+}
+
+// Used to read and store the data for one of the blocks in the JSON data
+class Block {
+  final String type;
+  final String text;
+  Block(this.type, this.text);
+
+  factory Block.fromJson(Map<String, dynamic> json) {
+    if (json case {'type': final type, 'text': final text}) {
+      return Block(type, text);
+    } else {
+      throw const FormatException('Unexpected JSON format');
+    }
+  }
 }
 
 // Mocking incoming JSON data with a multi-line string
